@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import ClockHands from './ClockHands'
 import TaskSegments from './TaskSegments'
 import TaskList from './TaskList'
-import { getActiveRoutine, calculateVisibleTasks, getCurrentMinutes } from '../utils/timeUtils'
+import { getActiveRoutine, calculateVisibleTasks, getCurrentMinutes, parseTimeToMinutes } from '../utils/timeUtils'
 import './Clock.css'
 
 const Clock = ({ routines, currentTime }) => {
@@ -15,11 +15,31 @@ const Clock = ({ routines, currentTime }) => {
     return getActiveRoutine(routines, currentTime)
   }, [routines, currentTime])
 
-  // Calculate visible tasks
+  // Calculate visible tasks for clock (60-minute window)
   const visibleTasks = useMemo(() => {
     if (!activeRoutine) return []
     const currentMinutes = getCurrentMinutes(currentTime)
     return calculateVisibleTasks(activeRoutine.data.tasks, currentMinutes)
+  }, [activeRoutine, currentTime])
+
+  // Calculate all tasks for task list (complete routine)
+  const allRoutineTasks = useMemo(() => {
+    if (!activeRoutine) return []
+    const currentMinutes = getCurrentMinutes(currentTime)
+
+    return activeRoutine.data.tasks.map(task => {
+      const taskStart = parseTimeToMinutes(task.startTime)
+      const taskEnd = taskStart + task.duration
+      const minutesUntilStart = taskStart - currentMinutes
+      const minutesUntilEnd = taskEnd - currentMinutes
+
+      return {
+        ...task,
+        minutesUntilStart,
+        minutesUntilEnd,
+        isActive: minutesUntilStart < 0 && minutesUntilEnd > 0
+      }
+    })
   }, [activeRoutine, currentTime])
 
   // Generate hour numbers
@@ -135,8 +155,8 @@ const Clock = ({ routines, currentTime }) => {
       </div>
 
       {/* Task list */}
-      {visibleTasks.length > 0 && (
-        <TaskList tasks={visibleTasks} />
+      {allRoutineTasks.length > 0 && (
+        <TaskList tasks={allRoutineTasks} />
       )}
     </div>
   )
