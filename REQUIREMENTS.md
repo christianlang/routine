@@ -13,9 +13,9 @@ A visual routine planning app that helps navigate morning and evening family rou
 
 | Zeit | Dauer | Aufgabe | Farbe | Icon |
 |------|-------|---------|-------|------|
-| 6:45-7:15 | 30 min | Frühstück | 🔵 Blue (#2196F3) | 🥣 Bowl |
+| 6:45-7:15 | 30 min | Frühstück | 🟠 Orange (#FF9500) | 🥣 Bowl |
 | 7:15-7:25 | 10 min | Zähne putzen | 🟢 Green (#4CAF50) | 🪥 Toothbrush |
-| 7:25-7:30 | 5 min | Anziehen | 🟡 Yellow (#FFD700) | 👕 Clothing |
+| 7:25-7:30 | 5 min | Anziehen | 🔵 Blue (#2196F3) | 👕 Clothing |
 | 7:30 | - | Haus verlassen | - | 🚪 |
 
 **Total duration**: 45 minutes (fits within one rolling hour view)
@@ -91,7 +91,7 @@ Legende:
   - Duration determines wedge size (e.g., 10-minute task = 60° wedge)
   - Segments positioned based on scheduled time relative to current minute
 - **Minute markers**: Standard clock numbers (5, 10, 15, etc.) for educational value
-- **Color coding**: Blue (Frühstück), Green (Zähne putzen), Yellow (Anziehen)
+- **Color coding**: Orange (Frühstück), Green (Zähne putzen), Blue (Anziehen)
 - **Labels**: Icon only on each segment (e.g., "🥣")
 - **Digital time display**: Optional small digital time for additional clarity
 
