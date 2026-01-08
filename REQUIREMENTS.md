@@ -5,7 +5,7 @@ A visual routine planning app that helps navigate morning and evening family rou
 
 ## Family Context
 - **Children**: 8-year-old (school) and 5-year-old (kindergarten)
-- **Routines**: Morning (6:45-7:31) and Evening (TBD)
+- **Routines**: Morning (6:45-7:31) and Evening (18:00-19:30)
 - **Language**: German interface (all labels and text in German)
 - **Both children follow the same routine**
 
@@ -19,6 +19,18 @@ A visual routine planning app that helps navigate morning and evening family rou
 | 7:30-7:31 | 1 min | Haus verlassen | 🟣 Purple (#9C27B0) | 🚪 Door |
 
 **Total duration**: 46 minutes (fits within one rolling hour view)
+**Label format**: Icon only (no text)
+
+## Evening Routine Schedule
+
+| Zeit | Dauer | Aufgabe | Farbe | Icon |
+|------|-------|---------|-------|------|
+| 18:00-18:30 | 30 min | Abendessen | 🔴 Pink (#E91E63) | 🍽️ Plate |
+| 18:30-18:45 | 15 min | Zähne putzen | 🔵 Cyan (#00BCD4) | 🪥 Toothbrush |
+| 18:45-19:00 | 15 min | Aufräumen | 🟡 Amber (#FFC107) | 🧹 Broom |
+| 19:00-19:30 | 30 min | Gute Nacht Geschichte | 🟣 Deep Purple (#673AB7) | 📖 Book |
+
+**Total duration**: 90 minutes (spans 1.5 hours)
 **Label format**: Icon only (no text)
 
 ## Core Visual Concept
@@ -182,11 +194,11 @@ This approach solves the original problems:
 
 ## Open Questions
 
-1. ✅ ~~Morning routine tasks & timing~~ - **DEFINED**: 6:45-7:30 (Frühstück, Zähne putzen, Anziehen)
-2. ✅ ~~Color scheme~~ - **DEFINED**: Orange, Türkis, Lila
-3. ✅ ~~Task labels~~ - **DEFINED**: Icons + Text
-4. ✅ ~~Tech stack~~ - **DEFINED**: React + Vite, GitHub Pages, JSON config
-5. ✅ ~~Configuration method~~ - **DEFINED**: JSON file, no UI editor needed
-6. **Evening routine**: Out of scope for MVP, focus on morning only
+1. ✅ ~~Morning routine tasks & timing~~ - **DEFINED**: 6:45-7:31 (Frühstück, Zähne putzen, Anziehen, Haus verlassen)
+2. ✅ ~~Evening routine~~ - **DEFINED**: 18:00-19:30 (Abendessen, Zähne putzen, Aufräumen, Gute Nacht Geschichte)
+3. ✅ ~~Color scheme~~ - **DEFINED**: Different colors for each task
+4. ✅ ~~Task labels~~ - **DEFINED**: Icons only (no text on clock)
+5. ✅ ~~Tech stack~~ - **DEFINED**: React + Vite, GitHub Pages, JSON config
+6. ✅ ~~Configuration method~~ - **DEFINED**: JSON file, no UI editor needed
 7. **Outside routine hours**: What should display show when no routine is active (e.g., at 3:00 PM)?
-   - Options: Empty clock, message "Keine Routine", or hide entirely?
+   - Current: Empty clock with just time markers

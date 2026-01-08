@@ -32,5 +32,39 @@
         "icon": "🚪"
       }
     ]
+  },
+  "evening": {
+    "startTime": "18:00",
+    "endTime": "19:30",
+    "tasks": [
+      {
+        "name": "Abendessen",
+        "startTime": "18:00",
+        "duration": 30,
+        "color": "#E91E63",
+        "icon": "🍽️"
+      },
+      {
+        "name": "Zähne putzen",
+        "startTime": "18:30",
+        "duration": 15,
+        "color": "#00BCD4",
+        "icon": "🪥"
+      },
+      {
+        "name": "Aufräumen",
+        "startTime": "18:45",
+        "duration": 15,
+        "color": "#FFC107",
+        "icon": "🧹"
+      },
+      {
+        "name": "Gute Nacht Geschichte",
+        "startTime": "19:00",
+        "duration": 30,
+        "color": "#673AB7",
+        "icon": "📖"
+      }
+    ]
   }
 }
