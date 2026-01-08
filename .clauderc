@@ -1,0 +1,16 @@
+# Project Instructions for Claude Code
+
+## Documentation
+- Always keep README.md up to date when adding new features or making significant changes
+- Update the Features section to reflect new capabilities
+- Add examples to the Demo section when new functionality is added
+- Keep the Configuration section in sync with the actual routines.json structure
+
+## Code Style
+- Use German for task names and user-facing text (this is a German family routine app)
+- Follow existing patterns for routine configuration in public/routines.json
+- Maintain consistent color coding across similar tasks in different routines
+
+## Commit Messages
+- Follow the existing commit style: brief, descriptive, imperative mood
+- Always include Co-Authored-By line for commits made with Claude
