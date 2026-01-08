@@ -70,6 +70,8 @@ const Clock = ({ routines, currentTime }) => {
           tasks={visibleTasks}
           center={center}
           radius={radius}
+          currentMinute={currentTime.getMinutes()}
+          currentSecond={currentTime.getSeconds()}
         />
 
         {/* Minute markers */}
