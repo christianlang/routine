@@ -22,29 +22,59 @@ const Clock = ({ routines, currentTime }) => {
     return calculateVisibleTasks(activeRoutine.data.tasks, currentMinutes)
   }, [activeRoutine, currentTime])
 
-  // Generate minute markers
-  const minuteMarkers = []
+  // Generate hour numbers
+  const hourNumbers = []
   for (let i = 0; i < 12; i++) {
     const angle = (i * 30 - 90) * (Math.PI / 180) // Start at 12 o'clock
-    const markerRadius = radius * 0.85
-    const x = center + markerRadius * Math.cos(angle)
-    const y = center + markerRadius * Math.sin(angle)
-    const value = i === 0 ? 60 : i * 5
+    const numberRadius = radius * 0.85
+    const x = center + numberRadius * Math.cos(angle)
+    const y = center + numberRadius * Math.sin(angle)
+    const value = i === 0 ? 12 : i
 
-    minuteMarkers.push(
+    hourNumbers.push(
       <text
         key={i}
         x={x}
         y={y}
         textAnchor="middle"
         dominantBaseline="middle"
-        className="minute-marker"
-        fontSize="24"
+        className="hour-number"
+        fontSize="32"
         fontWeight="bold"
         fill="#333"
       >
         {value}
       </text>
+    )
+  }
+
+  // Generate minute tick marks (outside segments)
+  const tickMarks = []
+  for (let i = 0; i < 60; i++) {
+    const angle = (i * 6 - 90) * (Math.PI / 180) // 6 degrees per minute
+
+    // Position ticks outside the segments (segments end at radius * 0.95)
+    const outerRadius = radius * 1.0
+    const innerRadius = radius * 0.975
+    const strokeWidth = 1
+    const strokeColor = '#999'
+
+    const x1 = center + innerRadius * Math.cos(angle)
+    const y1 = center + innerRadius * Math.sin(angle)
+    const x2 = center + outerRadius * Math.cos(angle)
+    const y2 = center + outerRadius * Math.sin(angle)
+
+    tickMarks.push(
+      <line
+        key={i}
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke={strokeColor}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+      />
     )
   }
 
@@ -67,6 +97,9 @@ const Clock = ({ routines, currentTime }) => {
             strokeWidth="4"
           />
 
+          {/* Tick marks */}
+          {tickMarks}
+
           {/* Task segments */}
           <TaskSegments
             tasks={visibleTasks}
@@ -76,8 +109,8 @@ const Clock = ({ routines, currentTime }) => {
             currentSecond={currentTime.getSeconds()}
           />
 
-          {/* Minute markers */}
-          {minuteMarkers}
+          {/* Hour numbers */}
+          {hourNumbers}
 
           {/* Center dot */}
           <circle
