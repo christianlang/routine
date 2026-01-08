@@ -6,6 +6,8 @@ A visual routine planning app for families with a rolling 60-minute window view.
 
 - 🕐 Rolling 60-minute window with real clock (hour and minute hands)
 - 🎨 Color-coded segments for different tasks
+- 🌅 Multiple routines (morning, evening) with automatic switching
+- 📋 Task list showing current and upcoming activities
 - 📱 Optimized for tablets and digital photo frames
 - 🌍 Fully localizable via JSON configuration
 - ⚡ PWA-capable (installable, offline-ready)
@@ -13,7 +15,9 @@ A visual routine planning app for families with a rolling 60-minute window view.
 
 ## Demo
 
-Try it with time simulation: `http://localhost:5173/routine/?time=07:00`
+Try it with time simulation:
+- Morning routine: `http://localhost:5173/routine/?time=07:00`
+- Evening routine: `http://localhost:5173/routine/?time=18:30`
 
 ## Local Development
 
@@ -44,6 +48,19 @@ Routines can be customized in `public/routines.json`:
         "duration": 30,
         "color": "#FF9500",
         "icon": "🥣"
+      }
+    ]
+  },
+  "evening": {
+    "startTime": "18:00",
+    "endTime": "19:30",
+    "tasks": [
+      {
+        "name": "Abendessen",
+        "startTime": "18:00",
+        "duration": 30,
+        "color": "#FF9500",
+        "icon": "🍽️"
       }
     ]
   }

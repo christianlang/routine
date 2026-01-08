@@ -17,7 +17,7 @@ const ClockHands = ({ currentTime, center, radius }) => {
   const hourHandY = center + hourHandLength * Math.sin(hourAngle)
 
   // Minute hand dimensions
-  const minuteHandLength = radius * 0.7
+  const minuteHandLength = radius * 0.75
   const minuteHandWidth = 6
   const minuteHandX = center + minuteHandLength * Math.cos(minuteAngle)
   const minuteHandY = center + minuteHandLength * Math.sin(minuteAngle)
@@ -41,7 +41,7 @@ const ClockHands = ({ currentTime, center, radius }) => {
         y1={center}
         x2={minuteHandX}
         y2={minuteHandY}
-        stroke="#666"
+        stroke="#333"
         strokeWidth={minuteHandWidth}
         strokeLinecap="round"
       />
