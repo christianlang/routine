@@ -1,31 +1,36 @@
-# Routinen-Uhr
+# Routine Clock
 
-Eine visuelle Routinen-Planungs-App für Familien mit rollender 60-Minuten-Ansicht.
+A visual routine planning app for families with a rolling 60-minute window view.
 
 ## Features
 
-- 🕐 Rollende 60-Minuten-Ansicht mit echter Uhr (Stunden- und Minutenzeiger)
-- 🎨 Farbige Segmente für verschiedene Aufgaben
-- 📱 Optimiert für Tablets und digitale Bilderrahmen
-- 🇩🇪 Vollständig auf Deutsch
-- ⚡ PWA-fähig (installierbar, offline-fähig)
+- 🕐 Rolling 60-minute window with real clock (hour and minute hands)
+- 🎨 Color-coded segments for different tasks
+- 📱 Optimized for tablets and digital photo frames
+- 🌍 Fully localizable via JSON configuration
+- ⚡ PWA-capable (installable, offline-ready)
+- 🧪 Time simulation mode for testing
 
-## Lokale Entwicklung
+## Demo
+
+Try it with time simulation: `http://localhost:5173/routine/?time=07:00`
+
+## Local Development
 
 ```bash
-# Dependencies installieren
+# Install dependencies
 npm install
 
-# Dev-Server starten
+# Start dev server
 npm run dev
 
-# Build für Produktion
+# Build for production
 npm run build
 ```
 
-## Konfiguration
+## Configuration
 
-Routinen können in `public/routines.json` angepasst werden:
+Routines can be customized in `public/routines.json`:
 
 ```json
 {
@@ -45,13 +50,28 @@ Routinen können in `public/routines.json` angepasst werden:
 }
 ```
 
+### Configuration Options
+
+- `name`: Task name (any language)
+- `startTime`: Start time in HH:MM format
+- `duration`: Duration in minutes
+- `color`: Hex color code
+- `icon`: Emoji icon
+
+### Visibility Logic
+
+Tasks are displayed when:
+- They start within the next 45 minutes
+- OR they are currently running
+- OR they ended less than 15 minutes ago
+
 ## Deployment
 
-Die App wird automatisch auf GitHub Pages deployed bei jedem Push auf `main`.
+The app is automatically deployed to GitHub Pages on every push to `main`.
 
 ## Tech Stack
 
 - React 18
 - Vite 6
 - date-fns
-- SVG für Grafiken
+- SVG graphics
