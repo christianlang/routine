@@ -37,16 +37,21 @@ export function calculateVisibleTasks(tasks, currentMinutes) {
     const minutesUntilStart = taskStart - currentMinutes
     const minutesUntilEnd = taskEnd - currentMinutes
 
-    // Only show tasks that:
-    // 1. Start within the next 45 minutes (not too far in future)
-    // 2. Or are currently running
-    // 3. Or ended within the last 15 minutes (grace period after completion)
+    // Only show tasks that fit in the rolling 60-minute window:
+    // A task is visible if:
+    // 1. It ends within the next 60 minutes (taskEnd <= currentTime + 60)
+    // 2. It hasn't ended more than 15 minutes ago (for grace period)
 
-    const isInFuture = minutesUntilStart >= 0 && minutesUntilStart < 45
+    // This ensures:
+    // - Running tasks are always shown
+    // - Future tasks only if they END within 60 minutes (prevents overlap on clock)
+    // - Recently finished tasks show briefly
+
+    const endsInWindow = minutesUntilEnd > 0 && minutesUntilEnd <= 60
     const isRunning = minutesUntilStart < 0 && minutesUntilEnd > 0
-    const isRecentlyFinished = minutesUntilEnd <= 0 && minutesUntilEnd > -15
+    const recentlyFinished = minutesUntilEnd <= 0 && minutesUntilEnd > -15
 
-    if (!isInFuture && !isRunning && !isRecentlyFinished) {
+    if (!endsInWindow && !isRunning && !recentlyFinished) {
       // Task is not in visible window
       return
     }
@@ -94,11 +99,11 @@ function hasVisibleTasks(routine, currentMinutes) {
     const minutesUntilEnd = taskEnd - currentMinutes
 
     // Same logic as calculateVisibleTasks
-    const isInFuture = minutesUntilStart >= 0 && minutesUntilStart < 45
+    const endsInWindow = minutesUntilEnd > 0 && minutesUntilEnd <= 60
     const isRunning = minutesUntilStart < 0 && minutesUntilEnd > 0
-    const isRecentlyFinished = minutesUntilEnd <= 0 && minutesUntilEnd > -15
+    const recentlyFinished = minutesUntilEnd <= 0 && minutesUntilEnd > -15
 
-    return isInFuture || isRunning || isRecentlyFinished
+    return endsInWindow || isRunning || recentlyFinished
   })
 }
 
