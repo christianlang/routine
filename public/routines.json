@@ -41,14 +41,14 @@
         "name": "Abendessen",
         "startTime": "18:00",
         "duration": 30,
-        "color": "#E91E63",
+        "color": "#FF9500",
         "icon": "🍽️"
       },
       {
         "name": "Zähne putzen",
         "startTime": "18:30",
         "duration": 15,
-        "color": "#00BCD4",
+        "color": "#4CAF50",
         "icon": "🪥"
       },
       {
@@ -62,7 +62,7 @@
         "name": "Gute Nacht Geschichte",
         "startTime": "19:00",
         "duration": 30,
-        "color": "#673AB7",
+        "color": "#2196F3",
         "icon": "📖"
       }
     ]

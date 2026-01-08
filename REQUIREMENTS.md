@@ -25,10 +25,10 @@ A visual routine planning app that helps navigate morning and evening family rou
 
 | Zeit | Dauer | Aufgabe | Farbe | Icon |
 |------|-------|---------|-------|------|
-| 18:00-18:30 | 30 min | Abendessen | 🔴 Pink (#E91E63) | 🍽️ Plate |
-| 18:30-18:45 | 15 min | Zähne putzen | 🔵 Cyan (#00BCD4) | 🪥 Toothbrush |
+| 18:00-18:30 | 30 min | Abendessen | 🟠 Orange (#FF9500) | 🍽️ Plate |
+| 18:30-18:45 | 15 min | Zähne putzen | 🟢 Green (#4CAF50) | 🪥 Toothbrush |
 | 18:45-19:00 | 15 min | Aufräumen | 🟡 Amber (#FFC107) | 🧹 Broom |
-| 19:00-19:30 | 30 min | Gute Nacht Geschichte | 🟣 Deep Purple (#673AB7) | 📖 Book |
+| 19:00-19:30 | 30 min | Gute Nacht Geschichte | 🔵 Blue (#2196F3) | 📖 Book |
 
 **Total duration**: 90 minutes (spans 1.5 hours)
 **Label format**: Icon only (no text)
