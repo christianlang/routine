@@ -42,8 +42,8 @@ Routines can be customized in `public/routines.json`:
         "name": "Frühstück",
         "startTime": "06:45",
         "duration": 30,
-        "color": "#FF9500",
-        "icon": "🍳"
+        "color": "#2196F3",
+        "icon": "🥣"
       }
     ]
   }

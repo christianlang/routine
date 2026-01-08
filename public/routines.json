@@ -7,21 +7,21 @@
         "name": "Frühstück",
         "startTime": "06:45",
         "duration": 30,
-        "color": "#FF9500",
-        "icon": "🍳"
+        "color": "#2196F3",
+        "icon": "🥣"
       },
       {
         "name": "Zähne putzen",
         "startTime": "07:15",
         "duration": 10,
-        "color": "#00C7BE",
+        "color": "#4CAF50",
         "icon": "🪥"
       },
       {
         "name": "Anziehen",
         "startTime": "07:25",
         "duration": 5,
-        "color": "#AF52DE",
+        "color": "#FFD700",
         "icon": "👕"
       }
     ]

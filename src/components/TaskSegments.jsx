@@ -126,35 +126,17 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
               strokeWidth="2"
             />
 
-            {/* Task label (icon + text) - only show if task has some future part */}
+            {/* Task icon - only show if task has some future part */}
             {futureSegment && (
-              <g transform={`translate(${x}, ${y})`}>
-                {/* Icon */}
-                <text
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontSize="32"
-                  dy="-12"
-                >
-                  {task.icon}
-                </text>
-
-                {/* Task name */}
-                <text
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontSize="16"
-                  fontWeight="bold"
-                  fill="white"
-                  dy="12"
-                  style={{
-                    textShadow: '0 1px 3px rgba(0,0,0,0.3)',
-                    filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
-                  }}
-                >
-                  {task.name}
-                </text>
-              </g>
+              <text
+                x={x}
+                y={y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="48"
+              >
+                {task.icon}
+              </text>
             )}
           </g>
         )
