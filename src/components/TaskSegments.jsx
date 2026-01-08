@@ -34,19 +34,6 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
     `
   }
 
-  /**
-   * Calculate text position and rotation for a segment
-   */
-  const getTextTransform = (startAngle, endAngle, radius) => {
-    const middleAngle = (startAngle + endAngle) / 2
-    const textRadius = radius * 0.7
-    const angle = ((middleAngle - 90) * Math.PI) / 180
-    const x = center + textRadius * Math.cos(angle)
-    const y = center + textRadius * Math.sin(angle)
-
-    return { x, y, rotation: middleAngle }
-  }
-
   const innerRadius = radius * 0.6
   const outerRadius = radius * 0.95
 
@@ -56,8 +43,6 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
   return (
     <g className="task-segments">
       {tasks.map((task, index) => {
-        const { x, y, rotation } = getTextTransform(task.startAngle, task.endAngle, radius)
-
         // Split segment into "past" and "future" parts based on time
         let pastSegment = null
         let futureSegment = null
@@ -103,7 +88,7 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
               <path
                 d={createArcPath(pastSegment.start, pastSegment.end, innerRadius, outerRadius)}
                 fill={task.color}
-                opacity={0.3}
+                opacity={0.15}
                 stroke="none"
               />
             )}
@@ -126,18 +111,6 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
               strokeWidth="2"
             />
 
-            {/* Task icon - only show if task has some future part */}
-            {futureSegment && (
-              <text
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="48"
-              >
-                {task.icon}
-              </text>
-            )}
           </g>
         )
       })}

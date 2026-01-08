@@ -1,3 +1,12 @@
+.clock-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+  max-width: 1400px;
+}
+
 .clock-container {
   display: flex;
   flex-direction: column;
@@ -22,7 +31,18 @@
   user-select: none;
 }
 
+@media (max-width: 1024px) {
+  .clock-wrapper {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
 @media (max-width: 768px) {
+  .clock-wrapper {
+    gap: 30px;
+  }
+
   .digital-time {
     font-size: 32px;
   }

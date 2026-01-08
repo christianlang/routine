@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import ClockHands from './ClockHands'
 import TaskSegments from './TaskSegments'
+import TaskList from './TaskList'
 import { getActiveRoutine, calculateVisibleTasks, getCurrentMinutes } from '../utils/timeUtils'
 import './Clock.css'
 
@@ -48,55 +49,62 @@ const Clock = ({ routines, currentTime }) => {
   }
 
   return (
-    <div className="clock-container">
-      <svg
-        width={size}
-        height={size}
-        viewBox={`0 0 ${size} ${size}`}
-        className="clock"
-      >
-        {/* Clock face background */}
-        <circle
-          cx={center}
-          cy={center}
-          r={radius}
-          fill="white"
-          stroke="#ddd"
-          strokeWidth="4"
-        />
+    <div className="clock-wrapper">
+      <div className="clock-container">
+        <svg
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          className="clock"
+        >
+          {/* Clock face background */}
+          <circle
+            cx={center}
+            cy={center}
+            r={radius}
+            fill="white"
+            stroke="#ddd"
+            strokeWidth="4"
+          />
 
-        {/* Task segments */}
-        <TaskSegments
-          tasks={visibleTasks}
-          center={center}
-          radius={radius}
-          currentMinute={currentTime.getMinutes()}
-          currentSecond={currentTime.getSeconds()}
-        />
+          {/* Task segments */}
+          <TaskSegments
+            tasks={visibleTasks}
+            center={center}
+            radius={radius}
+            currentMinute={currentTime.getMinutes()}
+            currentSecond={currentTime.getSeconds()}
+          />
 
-        {/* Minute markers */}
-        {minuteMarkers}
+          {/* Minute markers */}
+          {minuteMarkers}
 
-        {/* Center dot */}
-        <circle
-          cx={center}
-          cy={center}
-          r="8"
-          fill="#333"
-        />
+          {/* Center dot */}
+          <circle
+            cx={center}
+            cy={center}
+            r="8"
+            fill="#333"
+          />
 
-        {/* Clock hands */}
-        <ClockHands
-          currentTime={currentTime}
-          center={center}
-          radius={radius}
-        />
-      </svg>
+          {/* Clock hands */}
+          <ClockHands
+            currentTime={currentTime}
+            center={center}
+            radius={radius}
+          />
+        </svg>
 
-      {/* Digital time display */}
-      <div className="digital-time">
-        {currentTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+        {/* Digital time display */}
+        <div className="digital-time">
+          {currentTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+        </div>
       </div>
+
+      {/* Task list */}
+      {visibleTasks.length > 0 && (
+        <TaskList tasks={visibleTasks} />
+      )}
     </div>
   )
 }
