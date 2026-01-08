@@ -1,7 +1,7 @@
 {
   "morning": {
     "startTime": "06:45",
-    "endTime": "07:30",
+    "endTime": "07:31",
     "tasks": [
       {
         "name": "Frühstück",
@@ -23,6 +23,13 @@
         "duration": 5,
         "color": "#2196F3",
         "icon": "👕"
+      },
+      {
+        "name": "Haus verlassen",
+        "startTime": "07:30",
+        "duration": 1,
+        "color": "#9C27B0",
+        "icon": "🚪"
       }
     ]
   }

@@ -5,7 +5,7 @@ A visual routine planning app that helps navigate morning and evening family rou
 
 ## Family Context
 - **Children**: 8-year-old (school) and 5-year-old (kindergarten)
-- **Routines**: Morning (6:45-7:30) and Evening (TBD)
+- **Routines**: Morning (6:45-7:31) and Evening (TBD)
 - **Language**: German interface (all labels and text in German)
 - **Both children follow the same routine**
 
@@ -16,9 +16,9 @@ A visual routine planning app that helps navigate morning and evening family rou
 | 6:45-7:15 | 30 min | Frühstück | 🟠 Orange (#FF9500) | 🥣 Bowl |
 | 7:15-7:25 | 10 min | Zähne putzen | 🟢 Green (#4CAF50) | 🪥 Toothbrush |
 | 7:25-7:30 | 5 min | Anziehen | 🔵 Blue (#2196F3) | 👕 Clothing |
-| 7:30 | - | Haus verlassen | - | 🚪 |
+| 7:30-7:31 | 1 min | Haus verlassen | 🟣 Purple (#9C27B0) | 🚪 Door |
 
-**Total duration**: 45 minutes (fits within one rolling hour view)
+**Total duration**: 46 minutes (fits within one rolling hour view)
 **Label format**: Icon only (no text)
 
 ## Core Visual Concept
@@ -91,7 +91,7 @@ Legende:
   - Duration determines wedge size (e.g., 10-minute task = 60° wedge)
   - Segments positioned based on scheduled time relative to current minute
 - **Minute markers**: Standard clock numbers (5, 10, 15, etc.) for educational value
-- **Color coding**: Orange (Frühstück), Green (Zähne putzen), Blue (Anziehen)
+- **Color coding**: Orange (Frühstück), Green (Zähne putzen), Blue (Anziehen), Purple (Haus verlassen)
 - **Labels**: Icon only on each segment (e.g., "🥣")
 - **Digital time display**: Optional small digital time for additional clarity
 
