@@ -1,0 +1,29 @@
+.clock-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.clock {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  max-width: 90vmin;
+  max-height: 90vmin;
+}
+
+.digital-time {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333;
+  font-variant-numeric: tabular-nums;
+}
+
+.minute-marker {
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .digital-time {
+    font-size: 32px;
+  }
+}
