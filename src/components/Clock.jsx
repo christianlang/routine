@@ -33,11 +33,17 @@ const Clock = ({ routines, currentTime }) => {
       const minutesUntilStart = taskStart - currentMinutes
       const minutesUntilEnd = taskEnd - currentMinutes
 
+      // Consider a task active if:
+      // - It started in a previous minute (minutesUntilStart < 0), OR
+      // - We're in the start minute (minutesUntilStart === 0)
+      // AND it hasn't finished yet (minutesUntilEnd > 0)
+      const isActive = minutesUntilStart <= 0 && minutesUntilEnd > 0
+
       return {
         ...task,
         minutesUntilStart,
         minutesUntilEnd,
-        isActive: minutesUntilStart < 0 && minutesUntilEnd > 0
+        isActive
       }
     })
   }, [activeRoutine, currentTime])

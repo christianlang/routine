@@ -50,17 +50,23 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
         const taskStart = task.startAngle
         const taskEnd = task.endAngle
 
-        // Use time-based logic instead of angle-based
-        if (task.minutesUntilStart >= 0) {
+        // Use time-based logic with seconds precision
+        // minutesUntilStart can be negative (task started), 0 (same minute as start), or positive (future)
+        // Task has started if minutesUntilStart <= 0 (includes the start minute)
+        const hasStarted = task.minutesUntilStart <= 0
+        const hasFinished = task.minutesUntilEnd <= 0
+
+        if (!hasStarted) {
           // Task hasn't started yet - entire segment is future
           futureSegment = { start: taskStart, end: taskEnd }
-        } else if (task.minutesUntilEnd <= 0) {
+        } else if (hasFinished) {
           // Task has finished - entire segment is past
           pastSegment = { start: taskStart, end: taskEnd }
         } else {
           // Task is currently running - split at current angle (with seconds for smooth transition)
           // Calculate how much of the task has elapsed (including seconds)
-          const elapsedMinutes = -task.minutesUntilStart
+          // minutesUntilStart is negative when running, so negate it to get elapsed time
+          const elapsedMinutes = Math.max(0, -task.minutesUntilStart)
           const elapsedSeconds = currentSecond
           const elapsedTotal = elapsedMinutes + (elapsedSeconds / 60)
           const totalMinutes = task.duration
