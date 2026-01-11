@@ -74,16 +74,18 @@ const Clock = ({ routines, currentTime }) => {
     )
   }
 
-  // Generate minute tick marks (outside segments)
+  // Generate minute tick marks and numbers (outside segments)
   const tickMarks = []
+  const minuteNumbers = []
   for (let i = 0; i < 60; i++) {
     const angle = (i * 6 - 90) * (Math.PI / 180) // 6 degrees per minute
 
-    // Position ticks outside the segments (segments end at radius * 0.95)
+    // Make every 5th minute tick thicker
+    const isFiveMinuteMark = i % 5 === 0
     const outerRadius = radius * 1.0
-    const innerRadius = radius * 0.975
-    const strokeWidth = 1
-    const strokeColor = '#999'
+    const innerRadius = isFiveMinuteMark ? radius * 0.96 : radius * 0.975
+    const strokeWidth = isFiveMinuteMark ? 2 : 1
+    const strokeColor = isFiveMinuteMark ? '#666' : '#999'
 
     const x1 = center + innerRadius * Math.cos(angle)
     const y1 = center + innerRadius * Math.sin(angle)
@@ -102,6 +104,28 @@ const Clock = ({ routines, currentTime }) => {
         strokeLinecap="round"
       />
     )
+
+    // Add minute numbers for every 5th minute
+    if (isFiveMinuteMark) {
+      const numberRadius = radius * 1.08
+      const x = center + numberRadius * Math.cos(angle)
+      const y = center + numberRadius * Math.sin(angle)
+
+      minuteNumbers.push(
+        <text
+          key={`min-${i}`}
+          x={x}
+          y={y}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="12"
+          fontWeight="normal"
+          fill="#666"
+        >
+          {i}
+        </text>
+      )
+    }
   }
 
   return (
@@ -125,6 +149,9 @@ const Clock = ({ routines, currentTime }) => {
 
           {/* Tick marks */}
           {tickMarks}
+
+          {/* Minute numbers */}
+          {minuteNumbers}
 
           {/* Task segments */}
           <TaskSegments
