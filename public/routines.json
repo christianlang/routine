@@ -6,9 +6,16 @@
       {
         "name": "Frühstück",
         "startTime": "06:45",
-        "duration": 30,
+        "duration": 25,
         "color": "#FF9500",
         "icon": "🥣"
+      },
+      {
+        "name": "Haare bürsten",
+        "startTime": "07:10",
+        "duration": 5,
+        "color": "#E91E63",
+        "icon": "🪮"
       },
       {
         "name": "Zähne putzen",
