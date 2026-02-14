@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, doc, getDoc, setDoc, addDoc, collection } from 'firebase/firestore'
+import { initializeFirestore, persistentLocalCache, persistentSingleTabManager, doc, getDoc, setDoc, addDoc, collection } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: "AIzaSyAlrPQkJdhFxF8uJ_XWcgkPVRE0nlKRVkA",
@@ -11,7 +11,9 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
-const db = getFirestore(app)
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentSingleTabManager() })
+})
 
 export async function loadRoutine(id) {
   const snap = await getDoc(doc(db, 'routines', id))
