@@ -289,19 +289,29 @@ function Editor({ routineId, initialData, loading, onSaved }) {
 
     setSaveState('saving')
     try {
+      let savedId = currentId
       if (currentId) {
         await saveRoutine(currentId, toSave)
         onSaved(currentId, toSave)
       } else {
-        const newId = await createRoutine(toSave)
-        setCurrentId(newId)
-        onSaved(newId, toSave)
+        savedId = await createRoutine(toSave)
+        setCurrentId(savedId)
+        onSaved(savedId, toSave)
       }
       setSaveState('saved')
+      window.location.hash = `#/${savedId}`
     } catch (err) {
       console.error('Save failed:', err)
       setSaveState('idle')
       setErrors(['Speichern fehlgeschlagen. Bitte versuche es erneut.'])
+    }
+  }
+
+  function handleCancel() {
+    if (currentId) {
+      window.location.hash = `#/${currentId}`
+    } else {
+      window.location.hash = ''
     }
   }
 
@@ -315,9 +325,6 @@ function Editor({ routineId, initialData, loading, onSaved }) {
     <div className="editor">
       <div className="editor-header">
         <h1>{t('editorTitle')}</h1>
-        {currentId && (
-          <a href={`#/${currentId}`} className="editor-clock-btn">{t('showClock')}</a>
-        )}
       </div>
 
       {routineKeys.map(key => {
@@ -449,7 +456,10 @@ function Editor({ routineId, initialData, loading, onSaved }) {
 
       <div className="editor-actions">
         <button className="save-btn" onClick={handleSave} disabled={saveState === 'saving'}>
-          {saveState === 'saving' ? t('saving') : saveState === 'saved' ? t('saved') : t('save')}
+          {saveState === 'saving' ? t('saving') : t('saveAndShow')}
+        </button>
+        <button className="cancel-btn" onClick={handleCancel}>
+          {t('cancel')}
         </button>
         {currentId && (
           <button className="copy-link-btn" onClick={handleCopyLink}>

@@ -435,6 +435,20 @@
   cursor: not-allowed;
 }
 
+.cancel-btn {
+  padding: 14px 24px;
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #eee;
+}
+
 .copy-link-btn {
   padding: 14px 24px;
   background: #f5f5f5;
