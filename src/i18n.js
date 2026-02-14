@@ -3,6 +3,11 @@ const de = {
   landingTitle: 'Routinen-Uhr',
   landingSubtitle: 'Erstelle deine eigene Routinen-Uhr für den Familienalltag.',
   createNew: 'Neue Routine erstellen',
+  or: 'oder',
+  loadExisting: 'Bestehende Routine laden',
+  loadPlaceholder: 'Link oder ID einfügen',
+  loadButton: 'Laden',
+  loadError: 'Ungültiger Link oder ID.',
 
   // Editor
   editorTitle: 'Routine bearbeiten',

@@ -7,8 +7,28 @@ import { t } from './i18n'
 import './App.css'
 
 function parseHash() {
+  // Check for ?id= query parameter (preserved when pinning to home screen)
+  const params = new URLSearchParams(window.location.search)
+  const queryId = params.get('id')
+  if (queryId) {
+    // Store in localStorage and redirect to hash route
+    localStorage.setItem('routineId', queryId)
+    // Remove ?id= from URL and set hash instead
+    const cleanUrl = window.location.pathname
+    window.history.replaceState(null, '', cleanUrl + '#/' + queryId)
+    return { view: 'clock', id: queryId }
+  }
+
   const hash = window.location.hash.replace(/^#\/?/, '')
-  if (!hash) return { view: 'landing' }
+  if (!hash) {
+    // No hash: check localStorage for last-visited routine
+    const lastId = localStorage.getItem('routineId')
+    if (lastId) {
+      window.location.hash = `#/${lastId}`
+      return { view: 'clock', id: lastId }
+    }
+    return { view: 'landing' }
+  }
   if (hash === 'new') return { view: 'editor', id: null }
 
   const parts = hash.split('/')
@@ -62,6 +82,7 @@ function App() {
       .then(data => {
         if (data) {
           setRoutines(data)
+          localStorage.setItem('routineId', route.id)
         } else {
           setError('notFound')
         }

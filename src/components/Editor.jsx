@@ -317,7 +317,7 @@ function Editor({ routineId, initialData, loading, onSaved }) {
 
   function handleCopyLink() {
     if (!currentId) return
-    const url = `${window.location.origin}${window.location.pathname}#/${currentId}`
+    const url = `${window.location.origin}${window.location.pathname}?id=${currentId}`
     navigator.clipboard.writeText(url)
   }
 
