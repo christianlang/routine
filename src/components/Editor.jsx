@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import Clock from './Clock'
 import { createRoutine, saveRoutine, loadRoutine } from '../firebase'
 import { suggestDefaults } from '../utils/taskDefaults'
 import { t } from '../i18n'
@@ -44,6 +45,23 @@ function routineToMinuteRange(startTime, tasks) {
   return { start, end }
 }
 
+function buildRoutinesData(routineKeys, data) {
+  const result = {}
+  for (const key of routineKeys) {
+    const routine = data[key]
+    const tasks = computeStartTimes(routine.startTime, routine.tasks)
+    const endTime = computeEndTime(routine.startTime, routine.tasks)
+    result[key] = { startTime: routine.startTime, endTime, tasks }
+  }
+  return result
+}
+
+function minuteToDate(minute) {
+  const d = new Date()
+  d.setHours(Math.floor(minute / 60), minute % 60, 0, 0)
+  return d
+}
+
 function validate(routineData) {
   const errors = []
   const ranges = []
@@ -74,13 +92,81 @@ function validate(routineData) {
   return errors
 }
 
+// Mini preview component per routine – manages its own play state
+function RoutinePreview({ routinesData, range }) {
+  const [minute, setMinute] = useState(range.start)
+  const [playing, setPlaying] = useState(false)
+  const playRef = useRef(null)
+
+  // Reset minute when range changes (e.g. tasks edited)
+  useEffect(() => {
+    setMinute(prev => {
+      if (prev < range.start || prev > range.end) return range.start
+      return prev
+    })
+  }, [range.start, range.end])
+
+  useEffect(() => {
+    if (!playing) return
+    playRef.current = setInterval(() => {
+      setMinute(prev => {
+        const next = prev + 0.5
+        if (next >= range.end) {
+          setPlaying(false)
+          return range.end
+        }
+        return next
+      })
+    }, 200)
+    return () => clearInterval(playRef.current)
+  }, [playing, range.end])
+
+  function togglePlay() {
+    if (playing) {
+      setPlaying(false)
+    } else {
+      if (minute >= range.end) setMinute(range.start)
+      setPlaying(true)
+    }
+  }
+
+  const previewTime = minuteToDate(minute)
+
+  return (
+    <div className="routine-preview">
+      <div className="preview-clock-container">
+        <Clock routines={routinesData} currentTime={previewTime} />
+      </div>
+      <div className="preview-controls">
+        <button className="preview-play-btn" onClick={togglePlay}>
+          {playing ? '⏸' : '▶'}
+        </button>
+        <input
+          type="range"
+          className="preview-slider"
+          min={range.start}
+          max={range.end}
+          step="0.5"
+          value={minute}
+          onChange={e => {
+            setMinute(parseFloat(e.target.value))
+            setPlaying(false)
+          }}
+        />
+        <span className="preview-time-label">
+          {previewTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 function Editor({ routineId, initialData, loading, onSaved }) {
   const [data, setData] = useState(null)
-  const [saveState, setSaveState] = useState('idle') // idle | saving | saved
+  const [saveState, setSaveState] = useState('idle')
   const [errors, setErrors] = useState([])
   const [currentId, setCurrentId] = useState(routineId)
 
-  // Load data: from props, from Firebase, or use example
   useEffect(() => {
     if (initialData) {
       setData(stripMeta(initialData))
@@ -106,6 +192,7 @@ function Editor({ routineId, initialData, loading, onSaved }) {
   }
 
   const routineKeys = Object.keys(data).filter(k => k !== 'createdAt' && k !== 'lastModified')
+  const routinesData = buildRoutinesData(routineKeys, data)
 
   function updateRoutine(key, updates) {
     setData(prev => ({ ...prev, [key]: { ...prev[key], ...updates } }))
@@ -127,14 +214,12 @@ function Editor({ routineId, initialData, loading, onSaved }) {
     const task = data[routineKey].tasks[taskIndex]
     const updates = { name }
 
-    // Auto-suggest icon and color if they haven't been manually changed
-    // (i.e., if they still match a previous suggestion or are empty)
     const suggestion = suggestDefaults(name)
     if (suggestion) {
       const prevSuggestion = suggestDefaults(task.name)
       const iconIsDefault = !task.icon || task.icon === '⭐' ||
         (prevSuggestion && task.icon === prevSuggestion.icon)
-      const colorIsDefault = !task.color ||
+      const colorIsDefault = !task.color || task.color === '#9E9E9E' ||
         (prevSuggestion && task.color === prevSuggestion.color)
 
       if (iconIsDefault) updates.icon = suggestion.icon
@@ -193,14 +278,7 @@ function Editor({ routineId, initialData, loading, onSaved }) {
   }
 
   async function handleSave() {
-    // Build the data with computed startTimes and endTimes
-    const toSave = {}
-    for (const key of routineKeys) {
-      const routine = data[key]
-      const tasks = computeStartTimes(routine.startTime, routine.tasks)
-      const endTime = computeEndTime(routine.startTime, routine.tasks)
-      toSave[key] = { startTime: routine.startTime, endTime, tasks }
-    }
+    const toSave = buildRoutinesData(routineKeys, data)
 
     const validationErrors = validate(toSave)
     if (validationErrors.length > 0) {
@@ -247,99 +325,107 @@ function Editor({ routineId, initialData, loading, onSaved }) {
         const label = key === 'morning' ? t('morning') : t('evening')
         const tasksWithTimes = computeStartTimes(routine.startTime, routine.tasks)
         const endTime = computeEndTime(routine.startTime, routine.tasks)
+        const range = routineToMinuteRange(routine.startTime, routine.tasks)
 
         return (
-          <div key={key} className="routine-card">
-            <div className="routine-header">
-              <h2>{label}</h2>
-              <button
-                className="remove-routine-btn"
-                onClick={() => removeRoutine(key)}
-                title={t('removeRoutine')}
-              >
-                &times;
+          <div key={key} className="routine-section">
+            <div className="routine-card">
+              <div className="routine-header">
+                <h2>{label}</h2>
+                <button
+                  className="remove-routine-btn"
+                  onClick={() => removeRoutine(key)}
+                  title={t('removeRoutine')}
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="routine-time-row">
+                <label>
+                  {t('startTime')}
+                  <input
+                    type="time"
+                    value={routine.startTime}
+                    onChange={e => updateRoutine(key, { startTime: e.target.value })}
+                  />
+                </label>
+                <span className="routine-end-time">bis {endTime}</span>
+              </div>
+
+              <div className="task-table">
+                <div className="task-table-header">
+                  <span className="col-icon">{t('icon')}</span>
+                  <span className="col-name">{t('taskName')}</span>
+                  <span className="col-duration">{t('duration')}</span>
+                  <span className="col-time">{t('startTime')}</span>
+                  <span className="col-color">{t('color')}</span>
+                  <span className="col-move"></span>
+                  <span className="col-delete"></span>
+                </div>
+
+                {routine.tasks.map((task, i) => (
+                  <div key={i} className="task-row">
+                    <input
+                      className="col-icon task-icon-input"
+                      value={task.icon}
+                      onChange={e => updateTask(key, i, { icon: e.target.value })}
+                    />
+                    <input
+                      className="col-name task-name-input"
+                      value={task.name}
+                      placeholder={t('taskName')}
+                      onChange={e => handleNameChange(key, i, e.target.value)}
+                    />
+                    <input
+                      className="col-duration task-duration-input"
+                      type="number"
+                      min="1"
+                      max="120"
+                      value={task.duration}
+                      onChange={e => updateTask(key, i, { duration: parseInt(e.target.value) || 1 })}
+                    />
+                    <span className="col-time task-computed-time">
+                      {tasksWithTimes[i]?.startTime}
+                    </span>
+                    <input
+                      className="col-color task-color-input"
+                      type="color"
+                      value={task.color}
+                      onChange={e => updateTask(key, i, { color: e.target.value })}
+                    />
+                    <div className="col-move task-move-btns">
+                      <button
+                        className="task-move-btn"
+                        onClick={() => moveTask(key, i, -1)}
+                        disabled={i === 0}
+                      >&#9650;</button>
+                      <button
+                        className="task-move-btn"
+                        onClick={() => moveTask(key, i, 1)}
+                        disabled={i === routine.tasks.length - 1}
+                      >&#9660;</button>
+                    </div>
+                    <button
+                      className="col-delete task-delete-btn"
+                      onClick={() => removeTask(key, i)}
+                      title={t('deleteTask')}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <button className="add-task-btn" onClick={() => addTask(key)}>
+                + {t('addTask')}
               </button>
             </div>
 
-            <div className="routine-time-row">
-              <label>
-                {t('startTime')}
-                <input
-                  type="time"
-                  value={routine.startTime}
-                  onChange={e => updateRoutine(key, { startTime: e.target.value })}
-                />
-              </label>
-              <span className="routine-end-time">bis {endTime}</span>
-            </div>
-
-            <div className="task-table">
-              <div className="task-table-header">
-                <span className="col-icon">{t('icon')}</span>
-                <span className="col-name">{t('taskName')}</span>
-                <span className="col-duration">{t('duration')}</span>
-                <span className="col-time">{t('startTime')}</span>
-                <span className="col-color">{t('color')}</span>
-                <span className="col-move"></span>
-                <span className="col-delete"></span>
-              </div>
-
-              {routine.tasks.map((task, i) => (
-                <div key={i} className="task-row">
-                  <input
-                    className="col-icon task-icon-input"
-                    value={task.icon}
-                    onChange={e => updateTask(key, i, { icon: e.target.value })}
-                  />
-                  <input
-                    className="col-name task-name-input"
-                    value={task.name}
-                    placeholder={t('taskName')}
-                    onChange={e => handleNameChange(key, i, e.target.value)}
-                  />
-                  <input
-                    className="col-duration task-duration-input"
-                    type="number"
-                    min="1"
-                    max="120"
-                    value={task.duration}
-                    onChange={e => updateTask(key, i, { duration: parseInt(e.target.value) || 1 })}
-                  />
-                  <span className="col-time task-computed-time">
-                    {tasksWithTimes[i]?.startTime}
-                  </span>
-                  <input
-                    className="col-color task-color-input"
-                    type="color"
-                    value={task.color}
-                    onChange={e => updateTask(key, i, { color: e.target.value })}
-                  />
-                  <div className="col-move task-move-btns">
-                    <button
-                      className="task-move-btn"
-                      onClick={() => moveTask(key, i, -1)}
-                      disabled={i === 0}
-                    >&#9650;</button>
-                    <button
-                      className="task-move-btn"
-                      onClick={() => moveTask(key, i, 1)}
-                      disabled={i === routine.tasks.length - 1}
-                    >&#9660;</button>
-                  </div>
-                  <button
-                    className="col-delete task-delete-btn"
-                    onClick={() => removeTask(key, i)}
-                    title={t('deleteTask')}
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <button className="add-task-btn" onClick={() => addTask(key)}>
-              + {t('addTask')}
-            </button>
+            <RoutinePreview
+              routinesData={routinesData}
+              range={range}
+            />
           </div>
         )
       })}

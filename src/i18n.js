@@ -30,6 +30,11 @@ const de = {
   errorNoTasks: 'Füge mindestens eine Aufgabe hinzu.',
   errorNoName: 'Jede Aufgabe braucht einen Namen.',
 
+  // Preview
+  preview: 'Vorschau',
+  previewPlay: 'Abspielen',
+  previewPause: 'Pause',
+
   // Clock
   loading: 'Lade Routinen...',
   notFound: 'Routine nicht gefunden.',
