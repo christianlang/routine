@@ -82,8 +82,8 @@ const Clock = ({ routines, currentTime }) => {
 
     // Make every 5th minute tick thicker
     const isFiveMinuteMark = i % 5 === 0
-    const outerRadius = radius * 1.0
-    const innerRadius = isFiveMinuteMark ? radius * 0.96 : radius * 0.975
+    const outerRadius = radius * 0.995
+    const innerRadius = isFiveMinuteMark ? radius * 0.955 : radius * 0.97
     const strokeWidth = isFiveMinuteMark ? 2 : 1
     const strokeColor = isFiveMinuteMark ? '#666' : '#999'
 
@@ -151,7 +151,7 @@ const Clock = ({ routines, currentTime }) => {
             cy={center}
             r={radius}
             fill="white"
-            stroke="#ddd"
+            stroke="#ccc"
             strokeWidth="1.5"
           />
 

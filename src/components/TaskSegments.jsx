@@ -34,8 +34,8 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
     `
   }
 
-  const innerRadius = radius * 0.6
-  const outerRadius = radius * 0.95
+  const innerRadius = radius * 0.7
+  const outerRadius = radius * 1.0
 
   // Current minute hand position in degrees (including seconds for smooth transition)
   const currentAngle = currentMinute * 6 + currentSecond * 0.1 // 6 degrees per minute + 0.1 per second
@@ -108,14 +108,6 @@ const TaskSegments = ({ tasks, center, radius, currentMinute, currentSecond }) =
                 stroke="none"
               />
             )}
-
-            {/* Outer border for entire task segment */}
-            <path
-              d={createArcPath(taskStart, taskEnd, innerRadius, outerRadius)}
-              fill="none"
-              stroke="white"
-              strokeWidth="2"
-            />
 
           </g>
         )
