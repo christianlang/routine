@@ -67,7 +67,7 @@ const Clock = ({ routines, currentTime }) => {
         className="hour-number"
         fontSize="32"
         fontWeight="bold"
-        fill="#333"
+        fill="var(--clock-hour-number)"
       >
         {value}
       </text>
@@ -85,7 +85,7 @@ const Clock = ({ routines, currentTime }) => {
     const outerRadius = radius * 0.995
     const innerRadius = isFiveMinuteMark ? radius * 0.955 : radius * 0.97
     const strokeWidth = isFiveMinuteMark ? 2 : 1
-    const strokeColor = isFiveMinuteMark ? '#666' : '#999'
+    const strokeColor = isFiveMinuteMark ? 'var(--clock-tick-major)' : 'var(--clock-tick-minor)'
 
     const x1 = center + innerRadius * Math.cos(angle)
     const y1 = center + innerRadius * Math.sin(angle)
@@ -120,7 +120,7 @@ const Clock = ({ routines, currentTime }) => {
           dominantBaseline="middle"
           fontSize="12"
           fontWeight="bold"
-          fill="#888"
+          fill="var(--clock-minute-number)"
         >
           {i}
         </text>
@@ -143,15 +143,15 @@ const Clock = ({ routines, currentTime }) => {
             cy={center}
             r={radius * 1.14}
             fill="none"
-            stroke="#555"
+            stroke="var(--clock-outer-ring)"
             strokeWidth="1"
           />
           <circle
             cx={center}
             cy={center}
             r={radius}
-            fill="white"
-            stroke="#ccc"
+            fill="var(--clock-face)"
+            stroke="var(--clock-border)"
             strokeWidth="1.5"
           />
 
@@ -178,7 +178,7 @@ const Clock = ({ routines, currentTime }) => {
             cx={center}
             cy={center}
             r="8"
-            fill="#333"
+            fill="var(--clock-center-dot)"
           />
 
           {/* Clock hands */}

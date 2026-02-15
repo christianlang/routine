@@ -10,13 +10,13 @@
 
 .landing-title {
   font-size: 36px;
-  color: #eee;
+  color: var(--text-primary);
   margin-bottom: 12px;
 }
 
 .landing-subtitle {
   font-size: 18px;
-  color: #aaa;
+  color: var(--text-secondary);
   margin-bottom: 32px;
   max-width: 400px;
 }
@@ -51,11 +51,11 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: #555;
+  background: var(--border-color);
 }
 
 .landing-divider span {
-  color: #777;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
@@ -66,7 +66,7 @@
 
 .landing-load-label {
   font-size: 16px;
-  color: #aaa;
+  color: var(--text-secondary);
   margin-bottom: 12px;
 }
 
@@ -78,12 +78,12 @@
 .landing-load-input {
   flex: 1;
   padding: 12px 14px;
-  border: 1px solid #555;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 15px;
   outline: none;
-  background: #444;
-  color: #eee;
+  background: var(--bg-input);
+  color: var(--text-primary);
 }
 
 .landing-load-input:focus {

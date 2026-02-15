@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Clock from './components/Clock'
 import Editor from './components/Editor'
 import LandingPage from './components/LandingPage'
+import ThemeToggle from './components/ThemeToggle'
 import { loadRoutine } from './firebase'
 import { t } from './i18n'
 import './App.css'
@@ -115,18 +116,21 @@ function App() {
 
   // Landing page
   if (route.view === 'landing') {
-    return <LandingPage />
+    return <><LandingPage /><ThemeToggle /></>
   }
 
   // Editor
   if (route.view === 'editor') {
     return (
+      <>
       <Editor
         routineId={route.id}
         initialData={route.id ? routines : null}
         loading={loading}
         onSaved={handleRoutineSaved}
       />
+      <ThemeToggle />
+      </>
     )
   }
 
@@ -155,6 +159,7 @@ function App() {
       )}
       <Clock routines={routines} currentTime={displayTime} />
       <a href={`#/${route.id}/edit`} className="edit-link">{t('editRoutine')}</a>
+      <ThemeToggle />
     </div>
   )
 }

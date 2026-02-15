@@ -9,8 +9,7 @@ const TaskList = ({ tasks }) => {
           className={`task-item ${task.isActive ? 'active' : ''}`}
           style={{
             borderLeftColor: task.color,
-            background: task.isActive ? `linear-gradient(${task.color}25, ${task.color}25), white` : 'white',
-            ...(task.isActive ? { outline: `3px solid ${task.color}` } : {})
+            background: task.isActive ? `linear-gradient(${task.color}25, ${task.color}25), var(--bg-card)` : 'var(--bg-card)'
           }}
         >
           <div className="task-icon">{task.icon}</div>

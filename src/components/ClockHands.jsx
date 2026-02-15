@@ -30,7 +30,7 @@ const ClockHands = ({ currentTime, center, radius }) => {
         y1={center}
         x2={hourHandX}
         y2={hourHandY}
-        stroke="#333"
+        stroke="var(--clock-hand)"
         strokeWidth={hourHandWidth}
         strokeLinecap="round"
       />
@@ -41,7 +41,7 @@ const ClockHands = ({ currentTime, center, radius }) => {
         y1={center}
         x2={minuteHandX}
         y2={minuteHandY}
-        stroke="#333"
+        stroke="var(--clock-hand)"
         strokeWidth={minuteHandWidth}
         strokeLinecap="round"
       />

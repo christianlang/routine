@@ -26,7 +26,7 @@
 
 .status-message {
   font-size: 18px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .status-message a {
@@ -40,8 +40,8 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #333;
-  color: white;
+  background: var(--edit-link-bg);
+  color: var(--edit-link-color);
   padding: 10px 20px;
   border-radius: 8px;
   text-decoration: none;
@@ -51,5 +51,24 @@
 }
 
 .edit-link:hover {
+  opacity: 1;
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: var(--edit-link-bg);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  z-index: 100;
+}
+
+.theme-toggle:hover {
   opacity: 1;
 }

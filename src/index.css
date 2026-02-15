@@ -1,3 +1,96 @@
+/* Light theme (default) */
+:root {
+  --bg-primary: #f5f5f5;
+  --bg-card: white;
+  --bg-input: #fafafa;
+  --bg-button: #f5f5f5;
+  --bg-button-hover: #eee;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-muted: #999;
+  --border-color: #ddd;
+  --border-light: #f0f0f0;
+  --border-input: #eee;
+  --clock-face: white;
+  --clock-border: #ccc;
+  --clock-outer-ring: transparent;
+  --clock-hour-number: #333;
+  --clock-minute-number: #888;
+  --clock-tick-major: #666;
+  --clock-tick-minor: #999;
+  --clock-hand: #333;
+  --clock-center-dot: #333;
+  --segment-border: rgba(255,255,255,0.5);
+  --edit-link-bg: #333;
+  --edit-link-color: white;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-strong: rgba(0, 0, 0, 0.15);
+}
+
+/* Dark theme */
+[data-theme="dark"],
+:root:has([data-theme="auto"]) {
+  /* auto handled by media query below */
+}
+
+[data-theme="dark"] {
+  --bg-primary: #333;
+  --bg-card: white;
+  --bg-input: #444;
+  --bg-button: #555;
+  --bg-button-hover: #666;
+  --text-primary: #eee;
+  --text-secondary: #aaa;
+  --text-muted: #777;
+  --border-color: #555;
+  --border-light: #444;
+  --border-input: #555;
+  --clock-face: white;
+  --clock-border: #ccc;
+  --clock-outer-ring: transparent;
+  --clock-hour-number: #333;
+  --clock-minute-number: #888;
+  --clock-tick-major: #666;
+  --clock-tick-minor: #999;
+  --clock-hand: #333;
+  --clock-center-dot: #333;
+  --segment-border: rgba(255,255,255,0.5);
+  --edit-link-bg: #eee;
+  --edit-link-color: #333;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-strong: rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --bg-primary: #333;
+    --bg-card: white;
+    --bg-input: #444;
+    --bg-button: #555;
+    --bg-button-hover: #666;
+    --text-primary: #eee;
+    --text-secondary: #aaa;
+    --text-muted: #777;
+    --border-color: #555;
+    --border-light: #444;
+    --border-input: #555;
+    --clock-face: white;
+    --clock-border: #ccc;
+    --clock-outer-ring: transparent;
+    --clock-hour-number: #333;
+    --clock-minute-number: #888;
+    --clock-tick-major: #666;
+    --clock-tick-minor: #999;
+    --clock-hand: #333;
+    --clock-center-dot: #333;
+    --segment-border: rgba(255,255,255,0.5);
+    --edit-link-bg: #eee;
+    --edit-link-color: #333;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-strong: rgba(0, 0, 0, 0.4);
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,7 +103,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #333;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 #root {

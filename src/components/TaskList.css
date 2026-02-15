@@ -12,13 +12,13 @@
   padding: 16px 20px;
   border-left: 6px solid;
   border-radius: 8px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background-color: var(--bg-card);
+  box-shadow: 0 2px 4px var(--shadow);
   transition: all 0.3s ease;
 }
 
 .task-item.active {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--shadow-strong);
   transform: scale(1.02);
 }
 
@@ -37,12 +37,12 @@
 .task-name {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--clock-hour-number);
 }
 
 .task-time {
   font-size: 14px;
-  color: #666;
+  color: var(--clock-tick-major);
   font-variant-numeric: tabular-nums;
 }
 
