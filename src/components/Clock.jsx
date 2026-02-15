@@ -105,9 +105,9 @@ const Clock = ({ routines, currentTime }) => {
       />
     )
 
-    // Add minute numbers for every 5th minute
-    if (isFiveMinuteMark) {
-      const numberRadius = radius * 1.08
+    // Add minute numbers
+    {
+      const numberRadius = radius * 1.07
       const x = center + numberRadius * Math.cos(angle)
       const y = center + numberRadius * Math.sin(angle)
 
@@ -118,9 +118,9 @@ const Clock = ({ routines, currentTime }) => {
           y={y}
           textAnchor="middle"
           dominantBaseline="middle"
-          fontSize="12"
-          fontWeight="normal"
-          fill="#aaa"
+          fontSize={isFiveMinuteMark ? "12" : "9"}
+          fontWeight={isFiveMinuteMark ? "bold" : "normal"}
+          fill={isFiveMinuteMark ? "#888" : "#bbb"}
         >
           {i}
         </text>
@@ -138,6 +138,14 @@ const Clock = ({ routines, currentTime }) => {
           className="clock"
         >
           {/* Clock face background */}
+          <circle
+            cx={center}
+            cy={center}
+            r={radius * 1.14}
+            fill="none"
+            stroke="#999"
+            strokeWidth="1"
+          />
           <circle
             cx={center}
             cy={center}
