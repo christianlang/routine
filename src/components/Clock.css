@@ -20,13 +20,6 @@
   max-height: 90vmin;
 }
 
-.digital-time {
-  font-size: 48px;
-  font-weight: bold;
-  color: #333;
-  font-variant-numeric: tabular-nums;
-}
-
 .hour-number {
   user-select: none;
 }
@@ -43,7 +36,4 @@
     gap: 30px;
   }
 
-  .digital-time {
-    font-size: 32px;
-  }
 }

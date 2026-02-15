@@ -120,7 +120,7 @@ const Clock = ({ routines, currentTime }) => {
           dominantBaseline="middle"
           fontSize="12"
           fontWeight="normal"
-          fill="#666"
+          fill="#aaa"
         >
           {i}
         </text>
@@ -144,7 +144,7 @@ const Clock = ({ routines, currentTime }) => {
             r={radius}
             fill="white"
             stroke="#ddd"
-            strokeWidth="4"
+            strokeWidth="1.5"
           />
 
           {/* Tick marks */}
@@ -180,11 +180,6 @@ const Clock = ({ routines, currentTime }) => {
             radius={radius}
           />
         </svg>
-
-        {/* Digital time display */}
-        <div className="digital-time">
-          {currentTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
-        </div>
       </div>
 
       {/* Task list */}
