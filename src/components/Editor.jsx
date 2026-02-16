@@ -98,13 +98,10 @@ function RoutinePreview({ routinesData, range }) {
   const [playing, setPlaying] = useState(false)
   const playRef = useRef(null)
 
-  // Reset minute when range changes (e.g. tasks edited)
+  // Reset minute when range.start changes (e.g. startTime edited)
   useEffect(() => {
-    setMinute(prev => {
-      if (prev < range.start || prev > range.end) return range.start
-      return prev
-    })
-  }, [range.start, range.end])
+    setMinute(range.start)
+  }, [range.start])
 
   useEffect(() => {
     if (!playing) return
@@ -192,6 +189,11 @@ function Editor({ routineId, initialData, loading, onSaved }) {
   }
 
   const routineKeys = Object.keys(data).filter(k => k !== 'createdAt' && k !== 'lastModified')
+    .sort((a, b) => {
+      const timeA = data[a]?.startTime || ''
+      const timeB = data[b]?.startTime || ''
+      return timeA.localeCompare(timeB)
+    })
   const routinesData = buildRoutinesData(routineKeys, data)
 
   function updateRoutine(key, updates) {
