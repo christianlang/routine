@@ -1,0 +1,20 @@
+# Session Context
+
+## User Prompts
+
+### Prompt 1
+
+I just noticed that my project doesn't have an Agent.md file. Do you think that would be useful to facilitate future Agent sessions? If so, create one for me.
+
+### Prompt 2
+
+I want you to figure out all of the details. There is a good overview in the README, and I also documented REQUIREMENTS when I originally started building the document and the app. You can find technical details in the codebase as well, of course. Put together the content for me so that it will save future sessions from doing the same research.
+
+### Prompt 3
+
+Does it make sense to leave a note in the file that encourages agents to keep the file up to date when making changes in future sessions?
+
+### Prompt 4
+
+Oh, I think what we have is enough then. Let's commit and push this to main.
+
