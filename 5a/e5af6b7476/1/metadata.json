@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.4.9",
+  "checkpoint_id": "5ae5af6b7476",
+  "session_id": "58e789fc-85f1-4e8e-8e96-b4891b9d2d84",
+  "strategy": "manual-commit",
+  "created_at": "2026-03-05T20:22:13.736347Z",
+  "branch": "main",
+  "checkpoints_count": 0,
+  "files_touched": [
+    "AGENTS.md"
+  ],
+  "agent": "Cursor",
+  "turn_id": "33268e6b00ad",
+  "initial_attribution": {
+    "calculated_at": "2026-03-05T20:22:13.723606Z",
+    "agent_lines": 306,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 306,
+    "agent_percentage": 100
+  }
+}
