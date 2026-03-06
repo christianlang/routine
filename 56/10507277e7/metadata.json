@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.4.9",
+  "checkpoint_id": "5610507277e7",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 4,
+  "files_touched": [
+    "README.md",
+    "public/manifest.json",
+    "src/App.jsx",
+    "src/components/Editor.jsx",
+    "src/components/ThemeToggle.jsx",
+    "src/i18n.js"
+  ],
+  "sessions": [
+    {
+      "metadata": "/56/10507277e7/0/metadata.json",
+      "transcript": "/56/10507277e7/0/full.jsonl",
+      "context": "/56/10507277e7/0/context.md",
+      "content_hash": "/56/10507277e7/0/content_hash.txt",
+      "prompt": "/56/10507277e7/0/prompt.txt"
+    }
+  ]
+}
