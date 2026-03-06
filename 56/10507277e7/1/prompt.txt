@@ -1,0 +1,263 @@
+The UI of this routine clock is currently provided in German, and so is the default routine that new users get. I think I prepared for later translation already, but I'm not sure how well. Translate the whole app to English for me, in addition to German, and choose the language based on the user's browser settings.
+
+---
+
+<attached_files>
+
+<code_selection path="file:///Users/chris/.cursor/plans/browser-based-i18n_121d69c0.plan.md" lines="1-120">
+L1:---
+L2:name: browser-based-i18n
+L3:overview: Add English alongside German for the routine clock UI, choose language automatically from browser settings, and cleanly structure translations so future languages are easy to add.
+L4:todos:
+L5:  - id: extend-i18n-module
+L6:    content: Extend src/i18n.js to support English and German dictionaries, perform browser-based language detection, and expose translation and locale helpers.
+L7:    status: pending
+L8:  - id: replace-inline-german-ui
+L9:    content: Replace inline German strings in main components (App, LandingPage, Editor, ThemeToggle) with translation keys backed by both English and German values.
+L10:    status: pending
+L11:  - id: localize-default-routines
+L12:    content: Refactor the example/default routine initialization in Editor to choose between German and English examples based on detected language.
+L13:    status: pending
+L14:  - id: update-language-dependent-utilities
+L15:    content: Adjust utilities and config (taskDefaults keyword heuristics, manifest text, optional README note) to behave sensibly for both English and German users.
+L16:    status: pending
+L17:  - id: test-language-behavior
+L18:    content: Test the app in German and English browser locales to verify correct UI text, default routines, and time formatting, including fallback behavior for unsupported locales.
+L19:    status: pending
+L20:isProject: false
+L21:---
+L22:
+L23:## Goal
+L24:
+L25:Add English translations alongside the existing German UI and default routine, and automatically select the language based on the user’s browser settings (no manual language toggle), while keeping the codebase clean and ready for future locales.
+L26:
+L27:## High-level approach
+L28:
+L29:- **Centralize language handling** in a single i18n module that knows about supported languages (`en`, `de`), translates keys, and exposes the chosen locale for date/time formatting.
+L30:- **Replace inline German strings** in React components with translation keys, filling out both English and German dictionaries.
+L31:- **Localize default/example routines** so new users see a sensible routine in their own language while keeping existing saved routines untouched.
+L32:- **Align language-dependent utilities and config** (time formatting, theme labels, manifest text, keyword heuristics) so the UX feels consistent in English and German.
+L33:
+L34:## Detailed plan
+L35:
+L36:### 1. Extend the i18n module to support multiple languages
+L37:
+L38:- **Convert the current German-only map** in `[src/i18n.js](/Users/chris/src/routine/src/i18n.js)` into a structure like:
+L39:  - `const translations = { de: { ...existingKeys }, en: { ...newEnglishKeys } }`.
+L40:- **Add browser-based language detection**:
+L41:  - Implement a small helper that inspects `navigator.language` and `navigator.languages` (when available), extracts the base language (`en`, `de`), and falls back to `'en'` if nothing matches.
+L42:  - Guard access to `navigator`/`window` with `typeof window !== 'undefined'` so the module is safe in non-browser contexts (tests, SSR tools, etc.).
+L43:- **Expose simple APIs** from `i18n.js`:
+L44:  - `t(key: string): string` using the detected language, falling back to English and finally to the key.
+L45:  - `getCurrentLanguage(): 'en' | 'de'` (primarily for choosing localized example routines).
+L46:  - `getCurrentLocale(): string` returning something like `'en-US'` or `'de-DE'` for consistent `toLocaleTimeString` usage.
+L47:- **Populate English translations** for all existing keys currently in the German dictionary, keeping keys stable so existing usages only need dictionary updates.
+L48:
+L49:### 2. Replace hard-coded German UI text with translation keys
+L50:
+L51:- **Audit main UI components** and route containers:
+L52:  - `[src/App.jsx](/Users/chris/src/routine/src/App.jsx)` for status messages, test-mode banner text, labels for create/edit links, and not-found copy.
+L53:  - `[src/components/LandingPage.jsx](/Users/chris/src/routine/src/components/LandingPage.jsx)` for landing title/subtitle, CTA buttons, form labels, and error messages.
+L54:  - `[src/components/Editor.jsx](/Users/chris/src/routine/src/components/Editor.jsx)` for headings, field labels, validation messages, button labels, and inline phrases like `"bis"` in the time range.
+L55:  - `[src/components/ThemeToggle.jsx](/Users/chris/src/routine/src/components/ThemeToggle.jsx)` for theme labels (`Hell`, `Dunkel`, `Auto`) and the tooltip/title text.
+L56:- **For each hard-coded phrase**:
+L57:  - Introduce or reuse a `t('keyName')` entry in `i18n.js`.
+L58:  - Ensure both an English and German value exist for that key.
+L59:- **Normalize date/time formatting** where it currently forces `'de-DE'` (e.g. in the editor preview):
+L60:  - Replace literal `'de-DE'` with `getCurrentLocale()` (or similar) from `i18n.js` so the time preview reflects the chosen language/locale.
+L61:
+L62:### 3. Localize the default/example routine for new users
+L63:
+L64:- **Refactor the example routine** in `[src/components/Editor.jsx](/Users/chris/src/routine/src/components/Editor.jsx)`:
+L65:  - Replace the single `EXAMPLE_ROUTINE` (with German task names like `"Frühstück"`) with a map keyed by language, e.g. `EXAMPLE_ROUTINES = { de: {...}, en: {...} }`.
+L66:  - Provide an English version of the morning (and, if desired, evening) routine with localized task names (e.g. `"Breakfast"`, `"Brush teeth"`, `"Get dressed"`).
+L67:- **Wire the language into initialization**:
+L68:  - Use `getCurrentLanguage()` (or a light helper inside the editor) to pick the appropriate example routine when:
+L69:    - Creating a brand-new routine (`#/new`).
+L70:    - Falling back for missing/invalid remote data when loading by id.
+L71:- **Keep existing data intact**:
+L72:  - Do not migrate or auto-translate routines already saved in Firestore; they should display exactly as entered.
+L73:
+L74:### 4. Improve language-aware utilities and configuration
+L75:
+L76:- **Task keyword heuristics** in `[src/utils/taskDefaults.js](/Users/chris/src/routine/src/utils/taskDefaults.js)`:
+L77:  - Optionally extend `KEYWORD_MAP` to include English synonyms (e.g. `"breakfast"`, `"brush teeth"`, `"homework"`) pointing at the same icon/color presets as their German counterparts.
+L78:  - This keeps icon/color suggestions working well for English-named tasks without changing the existing German behavior.
+L79:- **PWA manifest text** in `[public/manifest.json](/Users/chris/src/routine/public/manifest.json)`:
+L80:  - Adjust `name`, `short_name`, and `description` to a neutral or bilingual form (e.g. `"Routine Clock / Routinen-Uhr"`, `"Family routine clock – visualize daily schedules"`) so the installable app is understandable in English and still recognizable in German.
+L81:  - Keep this static since web manifests are not fully locale-aware; the main UI will handle per-language text.
+L82:- **Documentation touch-up (optional)** in `[README.md](/Users/chris/src/routine/README.md)`:
+L83:  - Optionally add a short note explaining the new i18n behavior (automatic language from browser, supported languages `en`/`de`) and that translations live in `src/i18n.js`.
+L84:
+L85:### 5. Sanity checks and testing
+L86:
+L87:- **Runtime checks**:
+L88:  - Verify that loading the app in a browser with `navigator.language` set to German (e.g. `de-DE`) shows German UI and a German example routine.
+L89:  - Verify that loading it with `navigator.language` set to English (e.g. `en-US`, `en-GB`) shows English UI and an English example routine.
+L90:  - Confirm that time formatting in the editor preview and any other localized spots matches the selected locale.
+L91:- **Fallback behavior**:
+L92:  - Confirm that unsupported languages (e.g. `fr-FR`) fall back cleanly to English while still working correctly.
+L93:
+L94:### Architecture picture
+L95:
+L96:A simple view of the new flow:
+L97:
+L98:```mermaid
+L99:flowchart TD
+L100:  browser[Browser] --> appRoot[App]
+L101:  appRoot --> landing[LandingPage]
+L102:  appRoot --> editor[Editor]
+L103:  appRoot --> clock[Clock]
+L104:  appRoot --> themeToggle[ThemeToggle]
+L105:
+L106:  browser --> localeDetection["i18n.detectLanguage()"]
+L107:  localeDetection --> i18nCore[i18n]
+L108:  i18nCore --> translationsDe["translations.de"]
+L109:  i18nCore --> translationsEn["translations.en"]
+L110:
+L111:  landing --> i18nCore
+L112:  editor --> i18nCore
+L113:  clock --> i18nCore
+L114:  themeToggle --> i18nCore
+L115:
+L116:  editor --> exampleRoutines[ExampleRoutinesByLanguage]
+L117:  exampleRoutines --> i18nCore
+L118:```
+L119:
+L120:This keeps all language decisions in one place (`i18n`) while components simply call `t('key')` and, where needed, look up the current language or locale for language-specific behavior like default routines and time formatting.
+</code_selection>
+
+</attached_files>
+
+# Goal
+
+Implement the plan as specified, it is attached for your reference. Do NOT edit the plan file itself.
+
+To-do's from the plan have already been created. Do not create them again. Mark them as in_progress as you work, starting with the first one. Don't stop until you have completed all the to-dos.
+
+---
+
+The UI of this routine clock is currently provided in German, and so is the default routine that new users get. I think I prepared for later translation already, but I'm not sure how well. Translate the whole app to English for me, in addition to German, and choose the language based on the user's browser settings.
+
+---
+
+<attached_files>
+
+<code_selection path="/Users/chris/.cursor/plans/browser-based-i18n_121d69c0.plan.md" lines="1-98">
+L1:## Goal
+L2:
+L3:Add English translations alongside the existing German UI and default routine, and automatically select the language based on the user’s browser settings (no manual language toggle), while keeping the codebase clean and ready for future locales.
+L4:
+L5:## High-level approach
+L6:
+L7:- **Centralize language handling** in a single i18n module that knows about supported languages (`en`, `de`), translates keys, and exposes the chosen locale for date/time formatting.
+L8:- **Replace inline German strings** in React components with translation keys, filling out both English and German dictionaries.
+L9:- **Localize default/example routines** so new users see a sensible routine in their own language while keeping existing saved routines untouched.
+L10:- **Align language-dependent utilities and config** (time formatting, theme labels, manifest text, keyword heuristics) so the UX feels consistent in English and German.
+L11:
+L12:## Detailed plan
+L13:
+L14:### 1. Extend the i18n module to support multiple languages
+L15:
+L16:- **Convert the current German-only map** in `[src/i18n.js](/Users/chris/src/routine/src/i18n.js)` into a structure like:
+L17:  - `const translations = { de: { ...existingKeys }, en: { ...newEnglishKeys } }`.
+L18:- **Add browser-based language detection**:
+L19:  - Implement a small helper that inspects `navigator.language` and `navigator.languages` (when available), extracts the base language (`en`, `de`), and falls back to `'en'` if nothing matches.
+L20:  - Guard access to `navigator`/`window` with `typeof window !== 'undefined'` so the module is safe in non-browser contexts (tests, SSR tools, etc.).
+L21:- **Expose simple APIs** from `i18n.js`:
+L22:  - `t(key: string): string` using the detected language, falling back to English and finally to the key.
+L23:  - `getCurrentLanguage(): 'en' | 'de'` (primarily for choosing localized example routines).
+L24:  - `getCurrentLocale(): string` returning something like `'en-US'` or `'de-DE'` for consistent `toLocaleTimeString` usage.
+L25:- **Populate English translations** for all existing keys currently in the German dictionary, keeping keys stable so existing usages only need dictionary updates.
+L26:
+L27:### 2. Replace hard-coded German UI text with translation keys
+L28:
+L29:- **Audit main UI components** and route containers:
+L30:  - `[src/App.jsx](/Users/chris/src/routine/src/App.jsx)` for status messages, test-mode banner text, labels for create/edit links, and not-found copy.
+L31:  - `[src/components/LandingPage.jsx](/Users/chris/src/routine/src/components/LandingPage.jsx)` for landing title/subtitle, CTA buttons, form labels, and error messages.
+L32:  - `[src/components/Editor.jsx](/Users/chris/src/routine/src/components/Editor.jsx)` for headings, field labels, validation messages, button labels, and inline phrases like `"bis"` in the time range.
+L33:  - `[src/components/ThemeToggle.jsx](/Users/chris/src/routine/src/components/ThemeToggle.jsx)` for theme labels (`Hell`, `Dunkel`, `Auto`) and the tooltip/title text.
+L34:- **For each hard-coded phrase**:
+L35:  - Introduce or reuse a `t('keyName')` entry in `i18n.js`.
+L36:  - Ensure both an English and German value exist for that key.
+L37:- **Normalize date/time formatting** where it currently forces `'de-DE'` (e.g. in the editor preview):
+L38:  - Replace literal `'de-DE'` with `getCurrentLocale()` (or similar) from `i18n.js` so the time preview reflects the chosen language/locale.
+L39:
+L40:### 3. Localize the default/example routine for new users
+L41:
+L42:- **Refactor the example routine** in `[src/components/Editor.jsx](/Users/chris/src/routine/src/components/Editor.jsx)`:
+L43:  - Replace the single `EXAMPLE_ROUTINE` (with German task names like `"Frühstück"`) with a map keyed by language, e.g. `EXAMPLE_ROUTINES = { de: {...}, en: {...} }`.
+L44:  - Provide an English version of the morning (and, if desired, evening) routine with localized task names (e.g. `"Breakfast"`, `"Brush teeth"`, `"Get dressed"`).
+L45:- **Wire the language into initialization**:
+L46:  - Use `getCurrentLanguage()` (or a light helper inside the editor) to pick the appropriate example routine when:
+L47:    - Creating a brand-new routine (`#/new`).
+L48:    - Falling back for missing/invalid remote data when loading by id.
+L49:- **Keep existing data intact**:
+L50:  - Do not migrate or auto-translate routines already saved in Firestore; they should display exactly as entered.
+L51:
+L52:### 4. Improve language-aware utilities and configuration
+L53:
+L54:- **Task keyword heuristics** in `[src/utils/taskDefaults.js](/Users/chris/src/routine/src/utils/taskDefaults.js)`:
+L55:  - Optionally extend `KEYWORD_MAP` to include English synonyms (e.g. `"breakfast"`, `"brush teeth"`, `"homework"`) pointing at the same icon/color presets as their German counterparts.
+L56:  - This keeps icon/color suggestions working well for English-named tasks without changing the existing German behavior.
+L57:- **PWA manifest text** in `[public/manifest.json](/Users/chris/src/routine/public/manifest.json)`:
+L58:  - Adjust `name`, `short_name`, and `description` to a neutral or bilingual form (e.g. `"Routine Clock / Routinen-Uhr"`, `"Family routine clock – visualize daily schedules"`) so the installable app is understandable in English and still recognizable in German.
+L59:  - Keep this static since web manifests are not fully locale-aware; the main UI will handle per-language text.
+L60:- **Documentation touch-up (optional)** in `[README.md](/Users/chris/src/routine/README.md)`:
+L61:  - Optionally add a short note explaining the new i18n behavior (automatic language from browser, supported languages `en`/`de`) and that translations live in `src/i18n.js`.
+L62:
+L63:### 5. Sanity checks and testing
+L64:
+L65:- **Runtime checks**:
+L66:  - Verify that loading the app in a browser with `navigator.language` set to German (e.g. `de-DE`) shows German UI and a German example routine.
+L67:  - Verify that loading it with `navigator.language` set to English (e.g. `en-US`, `en-GB`) shows English UI and an English example routine.
+L68:  - Confirm that time formatting in the editor preview and any other localized spots matches the selected locale.
+L69:- **Fallback behavior**:
+L70:  - Confirm that unsupported languages (e.g. `fr-FR`) fall back cleanly to English while still working correctly.
+L71:
+L72:### Architecture picture
+L73:
+L74:A simple view of the new flow:
+L75:
+L76:```mermaid
+L77:flowchart TD
+L78:  browser[Browser] --> appRoot[App]
+L79:  appRoot --> landing[LandingPage]
+L80:  appRoot --> editor[Editor]
+L81:  appRoot --> clock[Clock]
+L82:  appRoot --> themeToggle[ThemeToggle]
+L83:
+L84:  browser --> localeDetection["i18n.detectLanguage()"]
+L85:  localeDetection --> i18nCore[i18n]
+L86:  i18nCore --> translationsDe["translations.de"]
+L87:  i18nCore --> translationsEn["translations.en"]
+L88:
+L89:  landing --> i18nCore
+L90:  editor --> i18nCore
+L91:  clock --> i18nCore
+L92:  themeToggle --> i18nCore
+L93:
+L94:  editor --> exampleRoutines[ExampleRoutinesByLanguage]
+L95:  exampleRoutines --> i18nCore
+L96:```
+L97:
+L98:This keeps all language decisions in one place (`i18n`) while components simply call `t('key')` and, where needed, look up the current language or locale for language-specific behavior like default routines and time formatting.
+</code_selection>
+
+</attached_files>
+
+Implement the plan as specified, it is attached for your reference. Do NOT edit the plan file itself.
+
+To-do's from the plan have already been created. Do not create them again. Mark them as in_progress as you work, starting with the first one. Don't stop until you have completed all the to-dos.
+
+---
+
+Okay, let me test this. Start the development server for me and give me a link to the app.
+
+---
+
+How can I change the language in the built-in viewer in Cursor?
+
+---
+
+Okay, open the web viewer again
