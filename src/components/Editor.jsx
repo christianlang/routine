@@ -2,18 +2,36 @@ import { useState, useEffect, useRef } from 'react'
 import Clock from './Clock'
 import { createRoutine, saveRoutine, loadRoutine } from '../firebase'
 import { suggestDefaults } from '../utils/taskDefaults'
-import { t } from '../i18n'
+import { t, getCurrentLocale, getCurrentLanguage } from '../i18n'
 import './Editor.css'
 
-const EXAMPLE_ROUTINE = {
-  morning: {
-    startTime: '07:00',
-    tasks: [
-      { name: 'Frühstück', duration: 20, icon: '🥣', color: '#FF9500' },
-      { name: 'Zähne putzen', duration: 5, icon: '🪥', color: '#4CAF50' },
-      { name: 'Anziehen', duration: 10, icon: '👕', color: '#2196F3' },
-    ],
+const EXAMPLE_ROUTINES = {
+  de: {
+    morning: {
+      startTime: '07:00',
+      tasks: [
+        { name: 'Frühstück', duration: 20, icon: '🥣', color: '#FF9500' },
+        { name: 'Zähne putzen', duration: 5, icon: '🪥', color: '#4CAF50' },
+        { name: 'Anziehen', duration: 10, icon: '👕', color: '#2196F3' },
+      ],
+    },
   },
+  en: {
+    morning: {
+      startTime: '07:00',
+      tasks: [
+        { name: 'Breakfast', duration: 20, icon: '🥣', color: '#FF9500' },
+        { name: 'Brush teeth', duration: 5, icon: '🪥', color: '#4CAF50' },
+        { name: 'Get dressed', duration: 10, icon: '👕', color: '#2196F3' },
+      ],
+    },
+  },
+}
+
+function getExampleRoutine() {
+  const lang = getCurrentLanguage()
+  const base = EXAMPLE_ROUTINES[lang] || EXAMPLE_ROUTINES.en
+  return typeof structuredClone === 'function' ? structuredClone(base) : JSON.parse(JSON.stringify(base))
 }
 
 function computeStartTimes(startTime, tasks) {
@@ -151,7 +169,7 @@ function RoutinePreview({ routinesData, range }) {
           }}
         />
         <span className="preview-time-label">
-          {previewTime.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+          {previewTime.toLocaleTimeString(getCurrentLocale(), { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
     </div>
@@ -170,10 +188,10 @@ function Editor({ routineId, initialData, loading, onSaved }) {
     } else if (routineId && !initialData && !loading) {
       loadRoutine(routineId).then(d => {
         if (d) setData(stripMeta(d))
-        else setData(structuredClone(EXAMPLE_ROUTINE))
+        else setData(getExampleRoutine())
       })
     } else if (!routineId) {
-      setData(structuredClone(EXAMPLE_ROUTINE))
+      setData(getExampleRoutine())
     }
   }, [routineId, initialData, loading])
 
@@ -305,7 +323,7 @@ function Editor({ routineId, initialData, loading, onSaved }) {
     } catch (err) {
       console.error('Save failed:', err)
       setSaveState('idle')
-      setErrors(['Speichern fehlgeschlagen. Bitte versuche es erneut.'])
+      setErrors([t('errorSaveFailed')])
     }
   }
 
@@ -359,7 +377,7 @@ function Editor({ routineId, initialData, loading, onSaved }) {
                     onChange={e => updateRoutine(key, { startTime: e.target.value })}
                   />
                 </label>
-                <span className="routine-end-time">bis {endTime}</span>
+                <span className="routine-end-time">{t('until')} {endTime}</span>
               </div>
 
               <div className="task-table">

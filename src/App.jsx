@@ -154,7 +154,7 @@ function App() {
     <div className="app">
       {simulatedTime && (
         <div className="test-mode-banner">
-          Test-Modus: Zeit simuliert
+          {t('testModeBanner')}
         </div>
       )}
       <Clock routines={routines} currentTime={displayTime} />

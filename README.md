@@ -9,6 +9,7 @@ A visual routine planning app for families with a rolling 60-minute window view.
 - 🌅 Multiple routines (morning, evening) with automatic switching
 - 📋 Task list showing current and upcoming activities
 - 📱 Optimized for tablets and digital photo frames
+- 🌍 English and German UI, language chosen automatically from browser settings
 - 🌍 Fully localizable via JSON configuration
 - ⚡ PWA-capable (installable, offline-ready)
 - 🧪 Time simulation mode for testing

@@ -1,7 +1,7 @@
 {
-  "name": "Routinen-Uhr",
-  "short_name": "Routinen-Uhr",
-  "description": "Familien Routinen-Uhr – Tagesabläufe visualisieren",
+  "name": "Routine Clock / Routinen-Uhr",
+  "short_name": "Routine Clock",
+  "description": "Family routine clock – visualize daily schedules",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

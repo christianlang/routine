@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { t } from '../i18n'
 
 const getStoredTheme = () => localStorage.getItem('theme') || 'auto'
 
@@ -19,13 +20,16 @@ const ThemeToggle = () => {
   }
 
   const icon = theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '🌗'
-  const label = theme === 'dark' ? 'Dunkel' : theme === 'light' ? 'Hell' : 'Auto'
+  const label =
+    theme === 'dark' ? t('themeDark') :
+    theme === 'light' ? t('themeLight') :
+    t('themeAuto')
 
   return (
     <button
       onClick={cycleTheme}
       className="theme-toggle"
-      title={`Theme: ${label}`}
+      title={`${t('themeTitle')}: ${label}`}
     >
       {icon}
     </button>
