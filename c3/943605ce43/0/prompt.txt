@@ -1,0 +1,1 @@
+It doesn't look great, unfortunately. When the controls are shown and I tap the screen, the controls flicker for a moment before they disappear.
