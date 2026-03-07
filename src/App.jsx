@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Clock from './components/Clock'
 import Editor from './components/Editor'
 import LandingPage from './components/LandingPage'
@@ -46,6 +46,8 @@ function App() {
   const [error, setError] = useState(null)
   const [currentTime, setCurrentTime] = useState(new Date())
   const [simulatedTime, setSimulatedTime] = useState(null)
+  const [controlsVisible, setControlsVisible] = useState(false)
+  const hideControlsTimeoutRef = useRef(null)
 
   // Listen to hash changes
   useEffect(() => {
@@ -109,6 +111,42 @@ function App() {
     return () => clearInterval(timer)
   }, [route.view, simulatedTime])
 
+  // Show edit/theme controls on interaction in clock view
+  useEffect(() => {
+    if (route.view !== 'clock') {
+      setControlsVisible(false)
+      if (hideControlsTimeoutRef.current) {
+        clearTimeout(hideControlsTimeoutRef.current)
+        hideControlsTimeoutRef.current = null
+      }
+      return
+    }
+
+    const showControls = () => {
+      setControlsVisible(true)
+      if (hideControlsTimeoutRef.current) {
+        clearTimeout(hideControlsTimeoutRef.current)
+      }
+      hideControlsTimeoutRef.current = setTimeout(() => {
+        setControlsVisible(false)
+      }, 4000)
+    }
+
+    window.addEventListener('mousemove', showControls)
+    window.addEventListener('touchstart', showControls)
+    window.addEventListener('mousedown', showControls)
+
+    return () => {
+      window.removeEventListener('mousemove', showControls)
+      window.removeEventListener('touchstart', showControls)
+      window.removeEventListener('mousedown', showControls)
+      if (hideControlsTimeoutRef.current) {
+        clearTimeout(hideControlsTimeoutRef.current)
+        hideControlsTimeoutRef.current = null
+      }
+    }
+  }, [route.view])
+
   const handleRoutineSaved = useCallback((id, data) => {
     setRoutines(data)
     window.location.hash = `#/${id}/edit`
@@ -158,8 +196,12 @@ function App() {
         </div>
       )}
       <Clock routines={routines} currentTime={displayTime} />
-      <a href={`#/${route.id}/edit`} className="edit-link">{t('editRoutine')}</a>
-      <ThemeToggle />
+      {controlsVisible && (
+        <>
+          <a href={`#/${route.id}/edit`} className="edit-link">{t('editRoutine')}</a>
+          <ThemeToggle />
+        </>
+      )}
     </div>
   )
 }
