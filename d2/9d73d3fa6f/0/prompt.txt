@@ -1,0 +1,1 @@
+Now I would like to simplify the UI further. I would like the two controls that are now shown at the bottom of the screen for switching between light and dark mode and for going into the edit mode to be hidden by default and only show when you tap the screen or move your mouse.
