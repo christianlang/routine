@@ -123,13 +123,26 @@ function App() {
     }
 
     const showControls = () => {
-      setControlsVisible(true)
-      if (hideControlsTimeoutRef.current) {
-        clearTimeout(hideControlsTimeoutRef.current)
-      }
-      hideControlsTimeoutRef.current = setTimeout(() => {
-        setControlsVisible(false)
-      }, 4000)
+      setControlsVisible(prev => {
+        // If already visible, hide immediately and clear any pending timeout
+        if (prev) {
+          if (hideControlsTimeoutRef.current) {
+            clearTimeout(hideControlsTimeoutRef.current)
+            hideControlsTimeoutRef.current = null
+          }
+          return false
+        }
+
+        // Otherwise show and start auto-hide timer
+        if (hideControlsTimeoutRef.current) {
+          clearTimeout(hideControlsTimeoutRef.current)
+        }
+        hideControlsTimeoutRef.current = setTimeout(() => {
+          setControlsVisible(false)
+          hideControlsTimeoutRef.current = null
+        }, 4000)
+        return true
+      })
     }
 
     window.addEventListener('mousemove', showControls)
