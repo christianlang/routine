@@ -122,9 +122,31 @@ function App() {
       return
     }
 
-    const showControls = () => {
+    const scheduleAutoHide = () => {
+      if (hideControlsTimeoutRef.current) {
+        clearTimeout(hideControlsTimeoutRef.current)
+      }
+      hideControlsTimeoutRef.current = setTimeout(() => {
+        setControlsVisible(false)
+        hideControlsTimeoutRef.current = null
+      }, 4000)
+    }
+
+    const handlePointerMove = () => {
       setControlsVisible(prev => {
-        // If already visible, hide immediately and clear any pending timeout
+        // Always ensure visible on move and reset timer
+        if (!prev) {
+          scheduleAutoHide()
+          return true
+        }
+        scheduleAutoHide()
+        return prev
+      })
+    }
+
+    const handlePointerDown = () => {
+      setControlsVisible(prev => {
+        // If already visible, hide immediately
         if (prev) {
           if (hideControlsTimeoutRef.current) {
             clearTimeout(hideControlsTimeoutRef.current)
@@ -132,27 +154,18 @@ function App() {
           }
           return false
         }
-
         // Otherwise show and start auto-hide timer
-        if (hideControlsTimeoutRef.current) {
-          clearTimeout(hideControlsTimeoutRef.current)
-        }
-        hideControlsTimeoutRef.current = setTimeout(() => {
-          setControlsVisible(false)
-          hideControlsTimeoutRef.current = null
-        }, 4000)
+        scheduleAutoHide()
         return true
       })
     }
 
-    window.addEventListener('mousemove', showControls)
-    window.addEventListener('touchstart', showControls)
-    window.addEventListener('mousedown', showControls)
+    window.addEventListener('pointermove', handlePointerMove)
+    window.addEventListener('pointerdown', handlePointerDown)
 
     return () => {
-      window.removeEventListener('mousemove', showControls)
-      window.removeEventListener('touchstart', showControls)
-      window.removeEventListener('mousedown', showControls)
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('pointerdown', handlePointerDown)
       if (hideControlsTimeoutRef.current) {
         clearTimeout(hideControlsTimeoutRef.current)
         hideControlsTimeoutRef.current = null
