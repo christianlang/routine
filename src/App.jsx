@@ -144,7 +144,13 @@ function App() {
       })
     }
 
-    const handlePointerDown = () => {
+    const handlePointerDown = (e) => {
+      // Don't dismiss when tapping the actual controls — otherwise pointerdown
+      // bubbles to window, hides them, and the click/navigation never fires.
+      if (e.target.closest?.('.edit-link, .theme-toggle')) {
+        return
+      }
+
       setControlsVisible(prev => {
         // If already visible, hide immediately
         if (prev) {
