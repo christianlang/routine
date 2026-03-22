@@ -1,0 +1,1 @@
+We introduced a bug. The buttons on the main screen cannot be tapped anymore. They disappear on tap.
